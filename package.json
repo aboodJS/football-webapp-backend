@@ -1,0 +1,26 @@
+{
+  "name": "football-webapp-backend",
+  "version": "1.0.0",
+  "description": "a backend for a football web app using api-football",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aboodJS/football-webapp-backend.git"
+  },
+  "author": "ajs",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/aboodJS/football-webapp-backend/issues"
+  },
+  "homepage": "https://github.com/aboodJS/football-webapp-backend#readme",
+  "devDependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  },
+  "type": "module"
+}
