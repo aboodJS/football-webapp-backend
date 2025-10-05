@@ -5,60 +5,31 @@ const app = express();
 
 const port = process.env.PORT;
 const apiUrl = process.env.API_URL;
-const apiKey = process.env.API_KEY;
 
 app.use(express.json());
+app.use(express.static("static"));
 
-app
-  .route("/data/league/:id")
-  .get(async (req, res) => {
-    const TeamData = await fetch(
-      `${apiUrl}teams?league=${req.params.id}&season=${2023}`,
-      {
-        headers: {
-          "x-rapidapi-key": apiKey,
-          "x-rapidapi-host": "v3.football.api-sports.io",
-        },
-      }
-    ).then((d) => d.json());
+const teamRoute = app.route("/teams/:team");
+const rootRoute = app.route("/");
 
-    const PlayerData = await fetch(
-      `${apiUrl}players?league=${req.params.id}&season=${2023}`,
-      {
-        headers: {
-          "x-rapidapi-key": apiKey,
-          "x-rapidapi-host": "v3.football.api-sports.io",
-        },
-      }
-    ).then((d) => d.json());
-    res.send(TeamData);
-  })
-  .get(async (req, res) => {
-    const TeamData = await fetch(
-      `${apiUrl}teams?league=${req.params.id}&season=${2023}`,
-      {
-        headers: {
-          "x-rapidapi-key": apiKey,
-          "x-rapidapi-host": "v3.football.api-sports.io",
-        },
-      }
-    ).then((d) => d.json());
+rootRoute.get((_, res) => {
+  res.render("index.html");
+});
 
-    res.send(TeamData);
+teamRoute.get(async (req, res) => {
+  const data = await fetch(`${apiUrl}searchteams.php?t=${req.params.team}`)
+    .then((d) => d.json())
+    .then((d) => d);
+
+  const results = data.teams.map((element) => {
+    if (element.strSport === "Soccer") {
+      return `${element.strTeam}, ${element.strTeamShort}, ${element.strLeague}`;
+    }
   });
 
-app.route("/data/players/:id").get(async (req, res) => {
-  const PlayerData = await fetch(
-    `${apiUrl}players?league=${req.params.id}&season=${2023}`,
-    {
-      headers: {
-        "x-rapidapi-key": apiKey,
-        "x-rapidapi-host": "v3.football.api-sports.io",
-      },
-    }
-  ).then((d) => d.json());
-  res.send(PlayerData);
+  res.send(`results: ${results}\n`);
 });
+
 app.listen(port, () => {
   console.log(`server url: http://localhost:${port}`);
 });
