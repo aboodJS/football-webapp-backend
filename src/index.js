@@ -9,8 +9,23 @@ const apiUrl = process.env.API_URL;
 app.use(express.json());
 app.use(express.static("static"));
 
-const teamRoute = app.route("/teams/:team");
 const rootRoute = app.route("/");
+const teamRoute = app.route("/teams/:team");
+const leagueRoute = app.route("/leagues");
+
+leagueRoute.get(async (req, res) => {
+  const data = await fetch(
+    `https://www.thesportsdb.com/api/v1/json/123/all_leagues.php?s=soccer`
+  )
+    .then((d) => d.json())
+    .then((d) => d);
+
+  const results = data.leagues.map((element) => {
+    return `${element.strLeague}\n`;
+  });
+
+  res.send(`results: ${results}`);
+});
 
 rootRoute.get((_, res) => {
   res.render("index.html");
